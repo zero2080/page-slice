@@ -27,13 +27,29 @@ body {
 .image-container {
     position: relative;
     width: 100%;
+    height: 500px; /* 고정 높이 조정 */
     overflow: hidden;
 }
 
 .main-image {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 2;
+    transition: clip-path 0.1s ease;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
 }
 
 .swipe-button {
@@ -41,38 +57,45 @@ body {
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #007bff;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     cursor: pointer;
     z-index: 10;
 }
 
 .swipe-button:hover {
-    background: rgba(255, 255, 255, 1);
     transform: translateY(-50%) scale(1.1);
 }
 
 .arrow-icon {
-    width: 0;
-    height: 0;
-    border-right: 12px solid #007bff;
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* 숨쉬듯 깜박이는 pulse 애니메이션 */
+@keyframes pulse {
+    0% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
 }
 
 .swipe-button.dragging {
-    background: rgba(0, 123, 255, 0.2);
-    border-color: #0056b3;
+    opacity: 0.8;
 }
 
 .swipe-button.dragging .arrow-icon {
-    border-left-color: #0056b3;
+    opacity: 0.7;
+    filter: brightness(0.8);
+    animation-play-state: paused; /* 드래그 중 애니메이션 일시정지 */
 }
 
 .progress-indicator {
@@ -114,15 +137,17 @@ body {
         max-width: 350px;
     }
 
+    .image-container {
+        height: 250px; /* 모바일 높이 조정 */
+    }
+
     .swipe-button {
-        width: 50px;
-        height: 50px;
         right: 15px;
     }
 
     .arrow-icon {
-        border-left: 10px solid #007bff;
-        border-top: 6px solid transparent;
-        border-bottom: 6px solid transparent;
+        width: 110px;
+        height: 110px;
+        /* 애니메이션은 상속됨 */
     }
 }

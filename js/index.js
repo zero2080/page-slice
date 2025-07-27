@@ -3,6 +3,7 @@ class SwipeHandler {
         this.swipeButton = document.getElementById('swipeButton');
         this.progressIndicator = document.getElementById('progressIndicator');
         this.container = document.querySelector('.image-container');
+        this.mainImage = document.getElementById('backgroundImage');
         
         this.startX = 0;
         this.currentX = 0;
@@ -82,6 +83,9 @@ class SwipeHandler {
         const progress = (moveDistance / maxMove) * 100;
         this.progressIndicator.style.width = `${progress}%`;
         
+        // 이미지 마스킹 효과 적용
+        this.updateImageMask(progress / 100);
+        
         // 터치 이벤트의 기본 동작 방지
         if (e.touches) {
             e.preventDefault();
@@ -116,10 +120,19 @@ class SwipeHandler {
         
         setTimeout(() => {
             // 또는 현재 페이지에서 이동: 
-            window.location.href = 'https://blog.cami.kr/dogchat-61937?traffic_type=internal​';
+            window.location.href = 'https://blog.cami.kr/dogchat-61937?traffic_type=internal';
             
-            // this.resetPosition();
+            this.resetPosition();
         }, 300);
+    }
+
+    updateImageMask(progress) {
+        // 진행률에 따라 오른쪽에서 왼쪽으로 지워지는 효과
+        // progress: 0 (전체 보임) ~ 1 (완전히 지워짐)
+        const rightPercentage = Math.max(0, 100 - (progress * 100));
+        
+        // clip-path로 오른쪽 경계를 조정
+        this.mainImage.style.clipPath = `polygon(0 0, ${rightPercentage}% 0, ${rightPercentage}% 100%, 0 100%)`;
     }
 
     resetPosition() {
@@ -127,6 +140,9 @@ class SwipeHandler {
         this.swipeButton.style.transition = 'all 0.3s ease';
         this.swipeButton.style.right = '20px';
         this.progressIndicator.style.width = '0%';
+        
+        // 이미지 마스킹 리셋
+        this.updateImageMask(0);
         
         setTimeout(() => {
             this.swipeButton.style.transition = '';
